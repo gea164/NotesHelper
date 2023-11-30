@@ -29,12 +29,14 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             treeView = new TreeView();
             contextMenuStrip = new ContextMenuStrip(components);
             editSelectedTopic = new ToolStripMenuItem();
             addNewTopic = new ToolStripMenuItem();
             addNewSubtopic = new ToolStripMenuItem();
             addNewDocument = new ToolStripMenuItem();
+            imageList = new ImageList(components);
             panel = new Panel();
             textBoxTitle = new TextBox();
             labelTopic = new Label();
@@ -51,8 +53,11 @@
             // 
             treeView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             treeView.ContextMenuStrip = contextMenuStrip;
+            treeView.ImageIndex = 0;
+            treeView.ImageList = imageList;
             treeView.Location = new Point(12, 11);
             treeView.Name = "treeView";
+            treeView.SelectedImageIndex = 0;
             treeView.Size = new Size(273, 370);
             treeView.TabIndex = 0;
             // 
@@ -86,6 +91,15 @@
             addNewDocument.Name = "addNewDocument";
             addNewDocument.Size = new Size(207, 22);
             addNewDocument.Text = "Add new note";
+            // 
+            // imageList
+            // 
+            imageList.ColorDepth = ColorDepth.Depth8Bit;
+            imageList.ImageStream = (ImageListStreamer)resources.GetObject("imageList.ImageStream");
+            imageList.TransparentColor = Color.Transparent;
+            imageList.Images.SetKeyName(0, "Arrow.ico");
+            imageList.Images.SetKeyName(1, "Folder.ico");
+            imageList.Images.SetKeyName(2, "Document.ico");
             // 
             // panel
             // 
@@ -181,6 +195,7 @@
             Controls.Add(panel);
             Controls.Add(treeView);
             Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "Notes Helper";
             Load += Form1_Load;
@@ -206,5 +221,6 @@
         private Label label3;
         private TextBox textBoxTitle;
         private ToolStripMenuItem editSelectedTopic;
+        private ImageList imageList;
     }
 }

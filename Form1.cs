@@ -1,5 +1,4 @@
 using NotesHelper.Forms.Note;
-using NotesHelper.Helpers.Nodes;
 using NotesHelper.Helpers.Tree;
 using NotesHelper.Helpers.TreeMenuHandler;
 
@@ -10,7 +9,6 @@ namespace NotesHelper
         private TreeHelper tree;
         private TreeMenuHandler treeMenu;
         private FormNote formNote;
-        private TreeNode? selectedNode = null;
 
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

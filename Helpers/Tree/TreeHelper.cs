@@ -5,6 +5,13 @@ namespace NotesHelper.Helpers.Tree
 {
     internal class TreeHelper
     {
+        private class ImageIndex
+        {
+            public static readonly int Arrow = 0;
+            public static readonly int Folder = 1;
+            public static readonly int Document = 2;
+        };
+        
         private readonly TreeView treeView;
         private TreeNode? selectedNode = null;
 
@@ -22,6 +29,7 @@ namespace NotesHelper.Helpers.Tree
             this.treeView.AfterSelect += (_, e) => { 
                 selectedNode = e.Node;
             };
+
             this.treeView.KeyDown += TreeView_KeyDown;
             this.treeView.MouseDoubleClick += TreeView_MouseDoubleClick;
         }
@@ -67,7 +75,7 @@ namespace NotesHelper.Helpers.Tree
             Database.DA.Topics.GetTopics(-1)
                 .ForEach(topic =>
                 {
-                    var node = treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text);
+                    var node = treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
                     LoadTopicNodes(node, topic.Id);
                     LoadNotesNodes(node, topic.Id);
                 });
@@ -95,7 +103,7 @@ namespace NotesHelper.Helpers.Tree
         //---------------------------------------------------------------------
         public void AddTopic(Topic topic)
         {
-            treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text);
+            treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
             treeView.Sort();
         }
         //---------------------------------------------------------------------
@@ -104,7 +112,7 @@ namespace NotesHelper.Helpers.Tree
         {
             if (selectedNode != null)
             {
-                selectedNode.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text);
+                selectedNode.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
                 treeView.Sort();
                 selectedNode.ExpandAll();
                 
@@ -116,7 +124,7 @@ namespace NotesHelper.Helpers.Tree
         { 
             if (selectedNode != null)
             {
-                selectedNode.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title);
+                selectedNode.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title, ImageIndex.Folder);
                 treeView.Sort();
                 selectedNode.ExpandAll();                
             }        
@@ -128,7 +136,7 @@ namespace NotesHelper.Helpers.Tree
             Database.DA.Topics.GetTopics(parentId)
                 .ForEach(topic =>
                 {
-                    var node = parent.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text);
+                    var node = parent.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
                     LoadTopicNodes(node, topic.Id);
                     LoadNotesNodes(node, topic.Id);
                 }
@@ -141,7 +149,7 @@ namespace NotesHelper.Helpers.Tree
             Database.DA.Notes.GetNotes(topicId)
                 .ForEach(note =>
                 {
-                    node.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title);
+                    node.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title, ImageIndex.Document);
                 }
             );
         }
