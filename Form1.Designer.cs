@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             treeView = new TreeView();
             contextMenuStrip = new ContextMenuStrip(components);
+            editSelectedTopic = new ToolStripMenuItem();
             addNewTopic = new ToolStripMenuItem();
             addNewSubtopic = new ToolStripMenuItem();
             addNewDocument = new ToolStripMenuItem();
@@ -42,7 +43,6 @@
             buttonSave = new Button();
             textBoxContent = new TextBox();
             label1 = new Label();
-            editSelectedTopic = new ToolStripMenuItem();
             contextMenuStrip.SuspendLayout();
             panel.SuspendLayout();
             SuspendLayout();
@@ -53,7 +53,7 @@
             treeView.ContextMenuStrip = contextMenuStrip;
             treeView.Location = new Point(12, 11);
             treeView.Name = "treeView";
-            treeView.Size = new Size(273, 367);
+            treeView.Size = new Size(273, 370);
             treeView.TabIndex = 0;
             // 
             // contextMenuStrip
@@ -62,6 +62,12 @@
             contextMenuStrip.Items.AddRange(new ToolStripItem[] { editSelectedTopic, addNewTopic, addNewSubtopic, addNewDocument });
             contextMenuStrip.Name = "contextMenuStrip1";
             contextMenuStrip.Size = new Size(208, 92);
+            // 
+            // editSelectedTopic
+            // 
+            editSelectedTopic.Name = "editSelectedTopic";
+            editSelectedTopic.Size = new Size(207, 22);
+            editSelectedTopic.Text = "Edit selected topic";
             // 
             // addNewTopic
             // 
@@ -93,7 +99,7 @@
             panel.Controls.Add(label1);
             panel.Location = new Point(291, 11);
             panel.Name = "panel";
-            panel.Size = new Size(490, 367);
+            panel.Size = new Size(490, 370);
             panel.TabIndex = 1;
             // 
             // textBoxTitle
@@ -130,7 +136,7 @@
             // buttonClose
             // 
             buttonClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            buttonClose.Location = new Point(8, 338);
+            buttonClose.Location = new Point(8, 341);
             buttonClose.Name = "buttonClose";
             buttonClose.Size = new Size(125, 23);
             buttonClose.TabIndex = 6;
@@ -140,7 +146,7 @@
             // buttonSave
             // 
             buttonSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonSave.Location = new Point(355, 339);
+            buttonSave.Location = new Point(355, 342);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(125, 23);
             buttonSave.TabIndex = 5;
@@ -154,7 +160,7 @@
             textBoxContent.Multiline = true;
             textBoxContent.Name = "textBoxContent";
             textBoxContent.ScrollBars = ScrollBars.Both;
-            textBoxContent.Size = new Size(472, 267);
+            textBoxContent.Size = new Size(472, 270);
             textBoxContent.TabIndex = 4;
             textBoxContent.WordWrap = false;
             // 
@@ -167,17 +173,11 @@
             label1.TabIndex = 0;
             label1.Text = "Title:";
             // 
-            // editSelectedTopic
-            // 
-            editSelectedTopic.Name = "editSelectedTopic";
-            editSelectedTopic.Size = new Size(207, 22);
-            editSelectedTopic.Text = "Edit selected topic";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(782, 384);
+            ClientSize = new Size(782, 392);
             Controls.Add(panel);
             Controls.Add(treeView);
             Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);

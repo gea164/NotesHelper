@@ -16,6 +16,7 @@ namespace NotesHelper.Helpers.Tree
         public TreeHelper(TreeView treeView)
         {
             this.treeView = treeView;
+            this.treeView.TreeViewNodeSorter = new TreeNodeComparer();
             
             //Events
             this.treeView.AfterSelect += (_, e) => { 
@@ -71,6 +72,7 @@ namespace NotesHelper.Helpers.Tree
                     LoadNotesNodes(node, topic.Id);
                 });
 
+            treeView.Sort();
             treeView.ExpandAll();
         }
         //---------------------------------------------------------------------
@@ -94,6 +96,7 @@ namespace NotesHelper.Helpers.Tree
         public void AddTopic(Topic topic)
         {
             treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text);
+            treeView.Sort();
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -102,7 +105,9 @@ namespace NotesHelper.Helpers.Tree
             if (selectedNode != null)
             {
                 selectedNode.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text);
+                treeView.Sort();
                 selectedNode.ExpandAll();
+                
             }
         }
         //---------------------------------------------------------------------
@@ -112,7 +117,8 @@ namespace NotesHelper.Helpers.Tree
             if (selectedNode != null)
             {
                 selectedNode.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title);
-                selectedNode.ExpandAll();
+                treeView.Sort();
+                selectedNode.ExpandAll();                
             }        
         }
         //---------------------------------------------------------------------
