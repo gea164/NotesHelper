@@ -90,7 +90,7 @@ namespace NotesHelper.Forms.Topic
             var formattedTopic = textBoxTopic.Text.Trim();
             if (topicToUpdate != null)
             {
-                buttonAccept.Enabled = formattedTopic.Length > 0 ||
+                buttonAccept.Enabled = formattedTopic.Length > 0 &&
                     formattedTopic != topicToUpdate.Text;
             }
             else

@@ -72,8 +72,8 @@ namespace NotesHelper.Helpers.TreeMenuHandler
             if(treeHelper.SelectedNode != null && treeHelper.SelectedNodeData != null)
             {
                 var form = new Forms.SubTopic.FormSubTopic(
-                    treeHelper.SelectedNode,
-                    treeHelper.SelectedNodeData.Id
+                    treeHelper.SelectedNodeData.Id,
+                    treeHelper.SelectedNode
                 );
                 form.OnNewSubTopic += treeHelper.AddSubTopic;
                 form.ShowDialog();
@@ -98,13 +98,23 @@ namespace NotesHelper.Helpers.TreeMenuHandler
         {
             if (treeHelper.SelectedNode != null)
             {
+                // If this is a topic
                 if (treeHelper.SelectedNode.Parent == null)
                 {
                     var formTopic = new Forms.Topic.FormTopic(treeHelper.SelectedNodeData);
                     formTopic.OnUpdatedTopic += treeHelper.UpdateSelectedTopicProps;
                     formTopic.ShowDialog();
                 }
-                
+                // If this is a subtopic
+                else if (treeHelper.SelectedNodeData != null)
+                {
+                    var formSubTopic = new Forms.SubTopic.FormSubTopic(
+                        treeHelper.SelectedNode.Parent,
+                        treeHelper.SelectedNodeData
+                    );
+                    formSubTopic.OnUpdatedSubTopic += treeHelper.UpdateSelectedTopicProps;
+                    formSubTopic.ShowDialog();
+                }                
             }
         }
     }
