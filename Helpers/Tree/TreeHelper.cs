@@ -39,7 +39,7 @@ namespace NotesHelper.Helpers.Tree
 
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-        public void UpdateSelectedNoteProps(string title, long index)
+        public void UpdateSelectedNoteProps(long index, string title)
         {
             if (selectedNode != null)
             {
@@ -50,6 +50,22 @@ namespace NotesHelper.Helpers.Tree
                         Text = title,
                         Type = "Note"
                     }
+                );
+            }
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        public void UpdateSelectedTopicProps(long index, string title)
+        {
+            if (selectedNode != null)
+            {
+                selectedNode.Text = title;
+                selectedNode.Name = NodeHelper.ToKey(new NodeData
+                {
+                    Id = index,
+                    Text = title,
+                    Type = "Topic"
+                }
                 );
             }
         }

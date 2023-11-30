@@ -96,7 +96,16 @@ namespace NotesHelper.Helpers.TreeMenuHandler
         //---------------------------------------------------------------------
         private void EditTopic_Click(object? sender, EventArgs e)
         {
-         
+            if (treeHelper.SelectedNode != null)
+            {
+                if (treeHelper.SelectedNode.Parent == null)
+                {
+                    var formTopic = new Forms.Topic.FormTopic(treeHelper.SelectedNodeData);
+                    formTopic.OnUpdatedTopic += treeHelper.UpdateSelectedTopicProps;
+                    formTopic.ShowDialog();
+                }
+                
+            }
         }
     }
 }

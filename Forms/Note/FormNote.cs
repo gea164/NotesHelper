@@ -128,7 +128,7 @@ namespace NotesHelper.Forms.Note
 
                 Database.DA.Notes.Update(noteData.Id, title: formattedTitle, text: content.Text);
 
-                treeHelper.UpdateSelectedNoteProps(formattedTitle, noteData.Id);
+                treeHelper.UpdateSelectedNoteProps(noteData.Id, formattedTitle);
 
                 ButtonClose_Click(null, null);
             }

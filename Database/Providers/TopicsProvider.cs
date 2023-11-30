@@ -86,9 +86,9 @@ namespace NotesHelper.Database.Providers
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public void Update(Topic topic)
+        public void Update(long topicId, string text)
         {
-            var query = $@"UPDATE {TABLE_NAME} SET text='{topic.Text}' WHERE id={topic.Id}";
+            var query = $@"UPDATE {TABLE_NAME} SET text='{text}' WHERE id={topicId}";
 
             var result = SQLiteHandler.Write(query);
             if (result.affectedRows != 1)
