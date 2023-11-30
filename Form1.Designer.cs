@@ -42,6 +42,7 @@
             buttonSave = new Button();
             textBoxContent = new TextBox();
             label1 = new Label();
+            editSelectedTopic = new ToolStripMenuItem();
             contextMenuStrip.SuspendLayout();
             panel.SuspendLayout();
             SuspendLayout();
@@ -54,37 +55,31 @@
             treeView.Name = "treeView";
             treeView.Size = new Size(273, 367);
             treeView.TabIndex = 0;
-            treeView.AfterSelect += treeView_AfterSelect;
-            treeView.KeyDown += treeView_KeyDown;
             // 
             // contextMenuStrip
             // 
             contextMenuStrip.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] { addNewTopic, addNewSubtopic, addNewDocument });
+            contextMenuStrip.Items.AddRange(new ToolStripItem[] { editSelectedTopic, addNewTopic, addNewSubtopic, addNewDocument });
             contextMenuStrip.Name = "contextMenuStrip1";
-            contextMenuStrip.Size = new Size(194, 70);
-            contextMenuStrip.Opening += contextMenuStrip_Opening;
+            contextMenuStrip.Size = new Size(208, 92);
             // 
             // addNewTopic
             // 
             addNewTopic.Name = "addNewTopic";
-            addNewTopic.Size = new Size(193, 22);
+            addNewTopic.Size = new Size(207, 22);
             addNewTopic.Text = "Add new topic";
-            addNewTopic.Click += addNewTopic_Click;
             // 
             // addNewSubtopic
             // 
             addNewSubtopic.Name = "addNewSubtopic";
-            addNewSubtopic.Size = new Size(193, 22);
+            addNewSubtopic.Size = new Size(207, 22);
             addNewSubtopic.Text = "Add new sub-topic";
-            addNewSubtopic.Click += addNewSubtopic_Click;
             // 
             // addNewDocument
             // 
             addNewDocument.Name = "addNewDocument";
-            addNewDocument.Size = new Size(193, 22);
-            addNewDocument.Text = "Add new document";
-            addNewDocument.Click += addNewDocument_Click;
+            addNewDocument.Size = new Size(207, 22);
+            addNewDocument.Text = "Add new note";
             // 
             // panel
             // 
@@ -108,10 +103,10 @@
             textBoxTitle.Name = "textBoxTitle";
             textBoxTitle.Size = new Size(410, 22);
             textBoxTitle.TabIndex = 10;
-            textBoxTitle.TextChanged += textBoxTitle_TextChanged;
             // 
             // labelTopic
             // 
+            labelTopic.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             labelTopic.AutoEllipsis = true;
             labelTopic.BorderStyle = BorderStyle.Fixed3D;
             labelTopic.Font = new Font("Consolas", 9F, FontStyle.Bold, GraphicsUnit.Point);
@@ -134,14 +129,13 @@
             // 
             // buttonClose
             // 
-            buttonClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            buttonClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             buttonClose.Location = new Point(8, 338);
             buttonClose.Name = "buttonClose";
             buttonClose.Size = new Size(125, 23);
             buttonClose.TabIndex = 6;
             buttonClose.Text = "Close";
             buttonClose.UseVisualStyleBackColor = true;
-            buttonClose.Click += buttonClose_Click;
             // 
             // buttonSave
             // 
@@ -152,7 +146,6 @@
             buttonSave.TabIndex = 5;
             buttonSave.Text = "Save";
             buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += buttonSave_Click;
             // 
             // textBoxContent
             // 
@@ -173,6 +166,12 @@
             label1.Size = new Size(49, 14);
             label1.TabIndex = 0;
             label1.Text = "Title:";
+            // 
+            // editSelectedTopic
+            // 
+            editSelectedTopic.Name = "editSelectedTopic";
+            editSelectedTopic.Size = new Size(207, 22);
+            editSelectedTopic.Text = "Edit selected topic";
             // 
             // Form1
             // 
@@ -206,5 +205,6 @@
         private Button buttonClose;
         private Label label3;
         private TextBox textBoxTitle;
+        private ToolStripMenuItem editSelectedTopic;
     }
 }

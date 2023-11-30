@@ -16,7 +16,7 @@ namespace NotesHelper.Database.Providers
             SQLiteHandler.Initialize("database.db");
             string query = $@"CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
                                 id          INTEGER PRIMARY KEY,
-                                parent_id   INTEGER,
+                                topic_id    INTEGER,
                                 title       TEXT,
                                 text        TEXT
                               )";
@@ -32,9 +32,22 @@ namespace NotesHelper.Database.Providers
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public List<Note> GetNotes(long parentId)
+        public Note? GetNote(long id)
         {
-            var query = $@"SELECT * FROM {TABLE_NAME} WHERE parent_id={parentId} ORDER BY title";
+            var query = $@"SELECT * FROM {TABLE_NAME} WHERE id={id}";
+
+            var result = SQLiteHandler.Read(query);
+            if (result.Count == 1)
+            {
+                return RecordToNote(result[0]);
+            }
+            return null;
+        }
+        //-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+        public List<Note> GetNotes(long topicId)
+        {
+            var query = $@"SELECT * FROM {TABLE_NAME} WHERE topic_id={topicId} ORDER BY title";
 
             var listOfNotes = new List<Note>();
             SQLiteHandler.Read(query)
@@ -45,10 +58,10 @@ namespace NotesHelper.Database.Providers
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public Note Insert(long parentId, string title, string text)
+        public Note Insert(long topicId, string title, string text)
         {
-            var query = $@"INSERT INTO {TABLE_NAME} (parent_id, title, text) 
-                        VALUES ({parentId}, '{title}', '{text}')";
+            var query = $@"INSERT INTO {TABLE_NAME} (topic_id, title, text) 
+                        VALUES ({topicId}, '{title}', '{text}')";
 
             var result = SQLiteHandler.Write(query);
             if (result.affectedRows == 1)
@@ -57,16 +70,16 @@ namespace NotesHelper.Database.Providers
                     Id = result.lastInsertedId,
                     Text = text,
                     Title = title,
-                    ParentId = parentId
+                    TopicId = topicId
                 };
             }
             throw new System.Exception($"Error adding new topic. Affected rows: {result.affectedRows}");
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public void Update(Topic topic)
+        public void Update(long id, string title, string text)
         {
-            var query = $@"UPDATE {TABLE_NAME} SET text='{topic.Text}' WHERE id={topic.Id}";
+            var query = $@"UPDATE {TABLE_NAME} SET title='{title}', text='{text}' WHERE id={id}";
 
             var result = SQLiteHandler.Write(query);
             if (result.affectedRows != 1)
@@ -98,7 +111,7 @@ namespace NotesHelper.Database.Providers
             return new Note
             {
                 Id = record["id"].ToLong(),
-                ParentId = record["parent_id"].ToLong(),
+                TopicId = record["topic_id"].ToLong(),
                 Title = record["title"].ToString(),
                 Text = record["text"].ToString()
             };
