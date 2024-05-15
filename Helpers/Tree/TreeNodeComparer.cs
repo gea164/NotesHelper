@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using static NotesHelper.Helpers.Nodes.NodeData;
 
 namespace NotesHelper.Helpers.Tree
 {
@@ -17,7 +18,7 @@ namespace NotesHelper.Helpers.Tree
                     {
                         return string.Compare(xData.Text, yData.Text);
                     }
-                    return xData.Type == "Topic" ? -1 : 1;
+                    return xData.Type == NodeTye.TOPIC ? -1 : 1;
                 }
             }
             return 0;

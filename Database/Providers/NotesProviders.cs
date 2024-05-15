@@ -103,6 +103,14 @@ namespace NotesHelper.Database.Providers
             var result = SQLiteHandler.Write(query);
             return result.affectedRows;
         }
+        //-------------------------------------------------------------------------------
+        public int DeleteByTopicIds(HashSet<string> ids)
+        {
+            var query = $"DELETE FROM {TABLE_NAME} WHERE topic_id IN ({String.Join(", ", ids)})";
+            var result = SQLiteHandler.Write(query);
+            return result.affectedRows;
+        }
+
 
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------

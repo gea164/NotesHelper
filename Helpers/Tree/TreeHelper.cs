@@ -1,5 +1,7 @@
-﻿using NotesHelper.Database.Models;
+﻿using NotesHelper.Common;
+using NotesHelper.Database.Models;
 using NotesHelper.Helpers.Nodes;
+using static NotesHelper.Helpers.Nodes.NodeData;
 
 namespace NotesHelper.Helpers.Tree
 {
@@ -43,13 +45,13 @@ namespace NotesHelper.Helpers.Tree
         {
             if (selectedNode != null)
             {
-                selectedNode.Text = title;
+                selectedNode.Text = TextHelper.FormatNoteText(title);
                 selectedNode.Name = NodeHelper.ToKey(new NodeData
                     {
                         Id = index,
                         Text = title,
-                        Type = "Note"
-                    }
+                        Type = NodeTye.NOTE
+                }
                 );
             }
         }
@@ -59,12 +61,12 @@ namespace NotesHelper.Helpers.Tree
         {
             if (selectedNode != null)
             {
-                selectedNode.Text = title;
+                selectedNode.Text = TextHelper.FormatTopicText(title);
                 selectedNode.Name = NodeHelper.ToKey(new NodeData
                 {
                     Id = index,
                     Text = title,
-                    Type = "Topic"
+                    Type = NodeTye.TOPIC
                 }
                 );
             }
@@ -91,7 +93,11 @@ namespace NotesHelper.Helpers.Tree
             Database.DA.Topics.GetTopics(-1)
                 .ForEach(topic =>
                 {
-                    var node = treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
+                    var node = treeView.Nodes.Add(
+                        key: NodeHelper.ToKey(topic), 
+                        text: TextHelper.FormatTopicText(topic.Text)
+                    );
+
                     LoadTopicNodes(node, topic.Id);
                     LoadNotesNodes(node, topic.Id);
                 });
@@ -119,7 +125,10 @@ namespace NotesHelper.Helpers.Tree
         //---------------------------------------------------------------------
         public void AddTopic(Topic topic)
         {
-            treeView.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
+            treeView.Nodes.Add(
+                key: NodeHelper.ToKey(topic),
+                text: TextHelper.FormatTopicText(topic.Text)
+            );
             treeView.Sort();
         }
         //---------------------------------------------------------------------
@@ -128,10 +137,12 @@ namespace NotesHelper.Helpers.Tree
         {
             if (selectedNode != null)
             {
-                selectedNode.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
+                selectedNode.Nodes.Add(
+                    key: NodeHelper.ToKey(topic),
+                    text: TextHelper.FormatTopicText(topic.Text)
+                );
                 treeView.Sort();
-                selectedNode.ExpandAll();
-                
+                selectedNode.ExpandAll();               
             }
         }
         //---------------------------------------------------------------------
@@ -140,7 +151,11 @@ namespace NotesHelper.Helpers.Tree
         { 
             if (selectedNode != null)
             {
-                selectedNode.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title, ImageIndex.Folder);
+                selectedNode.Nodes.Add(
+                    key: NodeHelper.ToKey(note),
+                    text: TextHelper.FormatNoteText(note.Title)
+                );
+
                 treeView.Sort();
                 selectedNode.ExpandAll();                
             }        
@@ -152,7 +167,10 @@ namespace NotesHelper.Helpers.Tree
             Database.DA.Topics.GetTopics(parentId)
                 .ForEach(topic =>
                 {
-                    var node = parent.Nodes.Add(key: NodeHelper.ToKey(topic), text: topic.Text, ImageIndex.Folder);
+                    var node = parent.Nodes.Add(
+                        key: NodeHelper.ToKey(topic),
+                        text: TextHelper.FormatTopicText(topic.Text)
+                    );
                     LoadTopicNodes(node, topic.Id);
                     LoadNotesNodes(node, topic.Id);
                 }
@@ -165,7 +183,10 @@ namespace NotesHelper.Helpers.Tree
             Database.DA.Notes.GetNotes(topicId)
                 .ForEach(note =>
                 {
-                    node.Nodes.Add(key: NodeHelper.ToKey(note), text: note.Title, ImageIndex.Document);
+                    node.Nodes.Add(
+                        key: NodeHelper.ToKey(note),
+                        text: TextHelper.FormatNoteText(note.Title)
+                    );
                 }
             );
         }
@@ -175,6 +196,7 @@ namespace NotesHelper.Helpers.Tree
         {
             if (e.KeyCode == Keys.Delete && selectedNode != null)
             {
+                var x = SelectedNodeData.Type;
                 var text = selectedNode.Text;
                 var childs = GetIds(selectedNode);
 
@@ -184,7 +206,11 @@ namespace NotesHelper.Helpers.Tree
                     MessageBoxIcon.Question)
                     == DialogResult.Yes)
                 {
+                    selectedNode = null;
+                    
+                    Database.DA.Notes.DeleteByTopicIds(childs);
                     Database.DA.Topics.Delete(childs);
+
                     Load();
                 }
             }
@@ -195,7 +221,7 @@ namespace NotesHelper.Helpers.Tree
         {
             if (SelectedNode != null && SelectedNode.Parent != null)
             {
-                if (SelectedNode.Parent != null && SelectedNodeData != null && SelectedNodeData.Type == "Note")
+                if (SelectedNode.Parent != null && SelectedNodeData != null && SelectedNodeData.Type == NodeTye.NOTE)
                 {
                     var note = Database.DA.Notes.GetNote(SelectedNodeData.Id);
                     if (note != null)
@@ -209,14 +235,14 @@ namespace NotesHelper.Helpers.Tree
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
 
-        private List<string> GetIds(TreeNode node)
+        private HashSet<String> GetIds(TreeNode node)
         {
             List<String> ids = new List<string>();
             if (node != null)
             {
                 GetChildsId(node, ids);
             }
-            return ids;
+            return new HashSet<String>(ids); ;
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------

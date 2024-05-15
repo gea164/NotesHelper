@@ -7,8 +7,9 @@
      */
     public class NodeData
     {
+        public enum NodeTye { TOPIC, NOTE, NONE };
         public long Id = -1;
-        public string Type = "";
+        public NodeTye Type = NodeTye.NONE;
         public string Text = "";
     }
 }

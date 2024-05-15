@@ -4,7 +4,7 @@ using NotesHelper.Helpers.TreeMenuHandler;
 
 namespace NotesHelper
 {
-    public partial class Form1 : Form
+    public partial class Main : Form
     {
         private TreeHelper tree;
         private TreeMenuHandler treeMenu;
@@ -12,7 +12,7 @@ namespace NotesHelper
 
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-        public Form1()
+        public Main()
         {
             InitializeComponent();
 

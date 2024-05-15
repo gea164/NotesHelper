@@ -1,6 +1,6 @@
 ﻿namespace NotesHelper
 {
-    partial class Form1
+    partial class Main
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             treeView = new TreeView();
             contextMenuStrip = new ContextMenuStrip(components);
             editSelectedTopic = new ToolStripMenuItem();
@@ -53,11 +53,8 @@
             // 
             treeView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             treeView.ContextMenuStrip = contextMenuStrip;
-            treeView.ImageIndex = 0;
-            treeView.ImageList = imageList;
             treeView.Location = new Point(12, 11);
             treeView.Name = "treeView";
-            treeView.SelectedImageIndex = 0;
             treeView.Size = new Size(273, 370);
             treeView.TabIndex = 0;
             // 
@@ -187,7 +184,7 @@
             label1.TabIndex = 0;
             label1.Text = "Title:";
             // 
-            // Form1
+            // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -196,7 +193,8 @@
             Controls.Add(treeView);
             Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "Form1";
+            Name = "Main";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Notes Helper";
             Load += Form1_Load;
             contextMenuStrip.ResumeLayout(false);

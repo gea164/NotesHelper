@@ -1,6 +1,7 @@
 ﻿using NotesHelper.Forms.Note;
 using NotesHelper.Helpers.Nodes;
 using NotesHelper.Helpers.Tree;
+using static NotesHelper.Helpers.Nodes.NodeData;
 
 namespace NotesHelper.Helpers.TreeMenuHandler
 {
@@ -49,7 +50,7 @@ namespace NotesHelper.Helpers.TreeMenuHandler
         {
             var isTopic = treeHelper.SelectedNode != null &&
                 treeHelper.SelectedNodeData != null &&
-                treeHelper.SelectedNodeData.Type == "Topic";
+                treeHelper.SelectedNodeData.Type == NodeTye.TOPIC;
             
             editTopic.Visible = isTopic;
             addNewSubTopic.Visible = isTopic;

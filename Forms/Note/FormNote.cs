@@ -45,7 +45,7 @@ namespace NotesHelper.Forms.Note
         //---------------------------------------------------------------------
         public void ShowNewNote(NodeData topicData)
         {
-            this.topic.Text = topicData.Text;
+            this.topic.Text = UnformatText(topicData.Text);
             this.title.Text = "";
             this.content.Text = "";
 
@@ -60,7 +60,7 @@ namespace NotesHelper.Forms.Note
         public void ShowUpdateNote(Database.Models.Note note, string parentTopic)
         {
             this.noteToUpdate = note;
-            this.topic.Text = parentTopic;
+            this.topic.Text = UnformatText(parentTopic);
             this.title.Text = note.Title;
             this.content.Text = note.Text;
 
@@ -68,7 +68,8 @@ namespace NotesHelper.Forms.Note
             buttonSave.Text = "Save";
 
             this.panel.Visible = true;
-            title.Focus();
+            content.Focus();
+            content.SelectionStart = content.Text.Length;
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -166,6 +167,16 @@ namespace NotesHelper.Forms.Note
             {
                 buttonSave.Enabled = false;
             }              
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        private static string UnformatText(string text)
+        {
+            if (text.StartsWith("[ ") && text.EndsWith(" ]"))
+            {
+                return text.Substring(2, text.Length - 4);
+            }
+            return text;
         }
     }
 }

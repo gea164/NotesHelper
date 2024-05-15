@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NotesHelper.Database.Models;
+using static NotesHelper.Helpers.Nodes.NodeData;
 
 namespace NotesHelper.Helpers.Nodes
 {
@@ -35,7 +36,7 @@ namespace NotesHelper.Helpers.Nodes
             {
                 Id = topic.Id,
                 Text = topic.Text,
-                Type = "Topic"
+                Type = NodeTye.TOPIC
             }
             );
         }
@@ -47,8 +48,8 @@ namespace NotesHelper.Helpers.Nodes
                 {
                     Id = note.Id,
                     Text = note.Text,
-                    Type = "Note"
-                }
+                    Type = NodeTye.NOTE
+            }
             );
         }
     }
