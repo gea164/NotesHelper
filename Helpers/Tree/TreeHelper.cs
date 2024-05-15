@@ -194,10 +194,12 @@ namespace NotesHelper.Helpers.Tree
         //---------------------------------------------------------------------
         private void TreeView_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete && selectedNode != null)
+            if (e.KeyCode == Keys.Delete && selectedNode != null && SelectedNodeData != null)
             {
-                var x = SelectedNodeData.Type;
-                var text = selectedNode.Text;
+                var text = SelectedNodeData.Type == NodeTye.TOPIC
+                    ? TextHelper.UnformatTopicTex(selectedNode.Text)
+                    : TextHelper.UnformatNoteTex(selectedNode.Text);
+
                 var childs = GetIds(selectedNode);
 
                 if (MessageBox.Show($"Delete '{text}'?\nChilds: {childs.Count - 1}",

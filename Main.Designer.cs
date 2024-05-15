@@ -30,33 +30,26 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            treeView = new TreeView();
             contextMenuStrip = new ContextMenuStrip(components);
             editSelectedTopic = new ToolStripMenuItem();
             addNewTopic = new ToolStripMenuItem();
             addNewSubtopic = new ToolStripMenuItem();
             addNewDocument = new ToolStripMenuItem();
-            imageList = new ImageList(components);
-            panel = new Panel();
+            treeView = new TreeView();
+            splitContainer = new SplitContainer();
+            buttonSave = new Button();
+            buttonCancel = new Button();
             textBoxTitle = new TextBox();
             labelTopic = new Label();
             label3 = new Label();
-            buttonClose = new Button();
-            buttonSave = new Button();
             textBoxContent = new TextBox();
             label1 = new Label();
             contextMenuStrip.SuspendLayout();
-            panel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
+            splitContainer.Panel1.SuspendLayout();
+            splitContainer.Panel2.SuspendLayout();
+            splitContainer.SuspendLayout();
             SuspendLayout();
-            // 
-            // treeView
-            // 
-            treeView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            treeView.ContextMenuStrip = contextMenuStrip;
-            treeView.Location = new Point(12, 11);
-            treeView.Name = "treeView";
-            treeView.Size = new Size(273, 370);
-            treeView.TabIndex = 0;
             // 
             // contextMenuStrip
             // 
@@ -89,37 +82,68 @@
             addNewDocument.Size = new Size(207, 22);
             addNewDocument.Text = "Add new note";
             // 
-            // imageList
+            // treeView
             // 
-            imageList.ColorDepth = ColorDepth.Depth8Bit;
-            imageList.ImageStream = (ImageListStreamer)resources.GetObject("imageList.ImageStream");
-            imageList.TransparentColor = Color.Transparent;
-            imageList.Images.SetKeyName(0, "Arrow.ico");
-            imageList.Images.SetKeyName(1, "Folder.ico");
-            imageList.Images.SetKeyName(2, "Document.ico");
+            treeView.ContextMenuStrip = contextMenuStrip;
+            treeView.Dock = DockStyle.Fill;
+            treeView.Location = new Point(0, 0);
+            treeView.Name = "treeView";
+            treeView.Size = new Size(300, 498);
+            treeView.TabIndex = 3;
             // 
-            // panel
+            // splitContainer
             // 
-            panel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel.Controls.Add(textBoxTitle);
-            panel.Controls.Add(labelTopic);
-            panel.Controls.Add(label3);
-            panel.Controls.Add(buttonClose);
-            panel.Controls.Add(buttonSave);
-            panel.Controls.Add(textBoxContent);
-            panel.Controls.Add(label1);
-            panel.Location = new Point(291, 11);
-            panel.Name = "panel";
-            panel.Size = new Size(490, 370);
-            panel.TabIndex = 1;
+            splitContainer.Dock = DockStyle.Fill;
+            splitContainer.Location = new Point(0, 0);
+            splitContainer.Name = "splitContainer";
+            // 
+            // splitContainer.Panel1
+            // 
+            splitContainer.Panel1.Controls.Add(treeView);
+            splitContainer.Panel1MinSize = 300;
+            // 
+            // splitContainer.Panel2
+            // 
+            splitContainer.Panel2.Controls.Add(buttonSave);
+            splitContainer.Panel2.Controls.Add(buttonCancel);
+            splitContainer.Panel2.Controls.Add(textBoxTitle);
+            splitContainer.Panel2.Controls.Add(labelTopic);
+            splitContainer.Panel2.Controls.Add(label3);
+            splitContainer.Panel2.Controls.Add(textBoxContent);
+            splitContainer.Panel2.Controls.Add(label1);
+            splitContainer.Panel2.Paint += splitContainer1_Panel2_Paint;
+            splitContainer.Panel2MinSize = 500;
+            splitContainer.Size = new Size(914, 498);
+            splitContainer.SplitterDistance = 300;
+            splitContainer.TabIndex = 2;
+            // 
+            // buttonSave
+            // 
+            buttonSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonSave.Location = new Point(523, 463);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(75, 23);
+            buttonSave.TabIndex = 17;
+            buttonSave.Text = "Save";
+            buttonSave.UseVisualStyleBackColor = true;
+            // 
+            // buttonCancel
+            // 
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            buttonCancel.Location = new Point(9, 463);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(75, 23);
+            buttonCancel.TabIndex = 16;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
             // 
             // textBoxTitle
             // 
             textBoxTitle.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBoxTitle.Location = new Point(69, 39);
+            textBoxTitle.Location = new Point(64, 38);
             textBoxTitle.Name = "textBoxTitle";
-            textBoxTitle.Size = new Size(410, 22);
-            textBoxTitle.TabIndex = 10;
+            textBoxTitle.Size = new Size(534, 22);
+            textBoxTitle.TabIndex = 15;
             // 
             // labelTopic
             // 
@@ -128,69 +152,48 @@
             labelTopic.BorderStyle = BorderStyle.Fixed3D;
             labelTopic.Font = new Font("Consolas", 9F, FontStyle.Bold, GraphicsUnit.Point);
             labelTopic.ForeColor = SystemColors.HotTrack;
-            labelTopic.Location = new Point(70, 10);
+            labelTopic.Location = new Point(64, 9);
             labelTopic.Name = "labelTopic";
-            labelTopic.Size = new Size(409, 22);
-            labelTopic.TabIndex = 9;
+            labelTopic.Size = new Size(534, 22);
+            labelTopic.TabIndex = 14;
             labelTopic.Text = "Topic:";
             labelTopic.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(15, 14);
+            label3.Location = new Point(9, 13);
             label3.Name = "label3";
             label3.Size = new Size(49, 14);
-            label3.TabIndex = 8;
+            label3.TabIndex = 13;
             label3.Text = "Topic:";
-            // 
-            // buttonClose
-            // 
-            buttonClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            buttonClose.Location = new Point(8, 341);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Size = new Size(125, 23);
-            buttonClose.TabIndex = 6;
-            buttonClose.Text = "Close";
-            buttonClose.UseVisualStyleBackColor = true;
-            // 
-            // buttonSave
-            // 
-            buttonSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonSave.Location = new Point(355, 342);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(125, 23);
-            buttonSave.TabIndex = 5;
-            buttonSave.Text = "Save";
-            buttonSave.UseVisualStyleBackColor = true;
             // 
             // textBoxContent
             // 
             textBoxContent.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            textBoxContent.Location = new Point(8, 68);
+            textBoxContent.Location = new Point(9, 66);
             textBoxContent.Multiline = true;
             textBoxContent.Name = "textBoxContent";
             textBoxContent.ScrollBars = ScrollBars.Both;
-            textBoxContent.Size = new Size(472, 270);
-            textBoxContent.TabIndex = 4;
+            textBoxContent.Size = new Size(589, 391);
+            textBoxContent.TabIndex = 12;
             textBoxContent.WordWrap = false;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(15, 42);
+            label1.Location = new Point(9, 41);
             label1.Name = "label1";
             label1.Size = new Size(49, 14);
-            label1.TabIndex = 0;
+            label1.TabIndex = 11;
             label1.Text = "Title:";
             // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 14F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(782, 392);
-            Controls.Add(panel);
-            Controls.Add(treeView);
+            ClientSize = new Size(914, 498);
+            Controls.Add(splitContainer);
             Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Main";
@@ -198,27 +201,28 @@
             Text = "Notes Helper";
             Load += Form1_Load;
             contextMenuStrip.ResumeLayout(false);
-            panel.ResumeLayout(false);
-            panel.PerformLayout();
+            splitContainer.Panel1.ResumeLayout(false);
+            splitContainer.Panel2.ResumeLayout(false);
+            splitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
+            splitContainer.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
-
-        private TreeView treeView;
         private ContextMenuStrip contextMenuStrip;
         private ToolStripMenuItem addNewTopic;
         private ToolStripMenuItem addNewDocument;
         private ToolStripMenuItem addNewSubtopic;
-        private Panel panel;
-        private Button buttonSave;
-        private TextBox textBoxContent;
-        private Label labelTopic;
-        private Label label1;
-        private Button buttonClose;
-        private Label label3;
-        private TextBox textBoxTitle;
         private ToolStripMenuItem editSelectedTopic;
-        private ImageList imageList;
+        private TreeView treeView;
+        private SplitContainer splitContainer;
+        private TextBox textBoxTitle;
+        private Label labelTopic;
+        private Label label3;
+        private TextBox textBoxContent;
+        private Label label1;
+        private Button buttonSave;
+        private Button buttonCancel;
     }
 }

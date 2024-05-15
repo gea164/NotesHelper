@@ -19,11 +19,11 @@ namespace NotesHelper
             this.tree = new TreeHelper(treeView);
 
             this.formNote = new FormNote(
-                panel: panel,
+                panel: splitContainer.Panel2,
                 topic: labelTopic,
                 title: textBoxTitle,
                 content: textBoxContent,
-                buttonClose: buttonClose,
+                buttonClose: buttonCancel,
                 buttonSave: buttonSave,
                 treeHelper: tree
             );
@@ -47,6 +47,11 @@ namespace NotesHelper
         {
             tree.Load();
             formNote.Hide();
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
