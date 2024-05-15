@@ -106,7 +106,7 @@ namespace NotesHelper.Database.Providers
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public int Delete(HashSet<string> ids)
+        public int Delete(List<string> ids)
         {
             var query = $"DELETE FROM {TABLE_NAME}  WHERE id IN ({String.Join(", ", ids)})";
             var result = SQLiteHandler.Write(query);

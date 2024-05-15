@@ -7,13 +7,12 @@ namespace NotesHelper.Helpers.Tree
 {
     internal class TreeHelper
     {
-        private class ImageIndex
+        class ListOfIdsToDelete
         {
-            public static readonly int Arrow = 0;
-            public static readonly int Folder = 1;
-            public static readonly int Document = 2;
-        };
-        
+            public List<string> listOfTopicsIds = new List<string>();
+            public List<string> listOfNotesIds = new List<string>();
+        }
+
         private readonly TreeView treeView;
         private TreeNode? selectedNode = null;
 
@@ -125,11 +124,12 @@ namespace NotesHelper.Helpers.Tree
         //---------------------------------------------------------------------
         public void AddTopic(Topic topic)
         {
-            treeView.Nodes.Add(
+            var newNode = treeView.Nodes.Add(
                 key: NodeHelper.ToKey(topic),
                 text: TextHelper.FormatTopicText(topic.Text)
             );
             treeView.Sort();
+            treeView.SelectedNode = newNode;
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -137,12 +137,13 @@ namespace NotesHelper.Helpers.Tree
         {
             if (selectedNode != null)
             {
-                selectedNode.Nodes.Add(
+                var newNode = selectedNode.Nodes.Add(
                     key: NodeHelper.ToKey(topic),
                     text: TextHelper.FormatTopicText(topic.Text)
                 );
                 treeView.Sort();
-                selectedNode.ExpandAll();               
+                selectedNode.ExpandAll();
+                treeView.SelectedNode = newNode;
             }
         }
         //---------------------------------------------------------------------
@@ -151,13 +152,14 @@ namespace NotesHelper.Helpers.Tree
         { 
             if (selectedNode != null)
             {
-                selectedNode.Nodes.Add(
+                var newNode = selectedNode.Nodes.Add(
                     key: NodeHelper.ToKey(note),
                     text: TextHelper.FormatNoteText(note.Title)
                 );
 
                 treeView.Sort();
-                selectedNode.ExpandAll();                
+                selectedNode.ExpandAll();
+                treeView.SelectedNode = newNode;
             }        
         }
         //---------------------------------------------------------------------
@@ -196,25 +198,61 @@ namespace NotesHelper.Helpers.Tree
         {
             if (e.KeyCode == Keys.Delete && selectedNode != null && SelectedNodeData != null)
             {
-                var text = SelectedNodeData.Type == NodeTye.TOPIC
-                    ? TextHelper.UnformatTopicTex(selectedNode.Text)
-                    : TextHelper.UnformatNoteTex(selectedNode.Text);
+                if (SelectedNodeData.Type == NodeTye.TOPIC)
+                {
+                    DeleteTopicAndSubTree();
+                }
+                else
+                {
+                    DelteNote();
+                }
+            }
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        private void DeleteTopicAndSubTree()
+        {
+            var text = TextHelper.UnformatTopicTex(selectedNode.Text);
 
-                var childs = GetIds(selectedNode);
+            var idsToDelete = GetIds(selectedNode);
 
-                if (MessageBox.Show($"Delete '{text}'?\nChilds: {childs.Count - 1}",
-                    "Delete", 
-                    MessageBoxButtons.YesNo, 
+            if (MessageBox.Show($"Delete '{text}'?" +
+                $"\nChilds: {idsToDelete.listOfTopicsIds.Count - 1}" +
+                $"\nNotes : {idsToDelete.listOfNotesIds.Count}",
+                "Delete Topic",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question)
+                == DialogResult.Yes)
+            {
+                selectedNode = null;
+
+                if (idsToDelete.listOfNotesIds.Count > 0)
+                {
+                    Database.DA.Notes.Delete(idsToDelete.listOfNotesIds);
+                }
+                if (idsToDelete.listOfTopicsIds.Count > 0)
+                {
+                    Database.DA.Topics.Delete(idsToDelete.listOfTopicsIds);
+                }
+
+                Load();
+            }
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        private void DelteNote()
+        {
+            var text = TextHelper.UnformatNoteTex(selectedNode.Text);
+
+            if (MessageBox.Show($"Delete note '{text}'?", "Delete Note",
+                    MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question)
                     == DialogResult.Yes)
-                {
-                    selectedNode = null;
-                    
-                    Database.DA.Notes.DeleteByTopicIds(childs);
-                    Database.DA.Topics.Delete(childs);
+            {
+                selectedNode = null;
 
-                    Load();
-                }
+                Database.DA.Notes.Delete(SelectedNodeData.Id);
+                Load();
             }
         }
         //---------------------------------------------------------------------
@@ -236,30 +274,36 @@ namespace NotesHelper.Helpers.Tree
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-
-        private HashSet<String> GetIds(TreeNode node)
+        private ListOfIdsToDelete GetIds(TreeNode node)
         {
-            List<String> ids = new List<string>();
+            ListOfIdsToDelete ids = new ListOfIdsToDelete();
             if (node != null)
             {
                 GetChildsId(node, ids);
             }
-            return new HashSet<String>(ids); ;
+            return ids;
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-        private void GetChildsId(TreeNode node, List<string> list)
+        private void GetChildsId(TreeNode node, ListOfIdsToDelete ids)
         {
             if (node != null)
             {
                 var nodeData = NodeHelper.NodeDataFromTreeNode(node);
                 if (nodeData != null)
                 {
-                    list.Add(nodeData.Id.ToString());
-                    foreach (TreeNode child in node.Nodes)
+                    if (nodeData.Type == NodeTye.TOPIC)
                     {
-                        GetChildsId(child, list);
+                        ids.listOfTopicsIds.Add(nodeData.Id.ToString());
+                        foreach (TreeNode child in node.Nodes)
+                        {
+                            GetChildsId(child, ids);
+                        }
                     }
+                    else
+                    {
+                        ids.listOfNotesIds.Add(nodeData.Id.ToString());
+                    }                    
                 }
             }
         }

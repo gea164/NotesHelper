@@ -6,5 +6,6 @@
         public long TopicId = -1;
         public string Title = "";
         public string Text = "";
+        public string LastUpdate = "";
     }
 }

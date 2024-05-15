@@ -23,7 +23,7 @@ namespace NotesHelper.Forms.Topic
             if (topicToUpdate != null )
             {
                 this.Text = "Update Topic";
-                this.textBoxTopic.Text = topicToUpdate.Text;
+                this.textBoxTopic.Text = Common.TextHelper.UnformatTopicTex(topicToUpdate.Text);
                 this.buttonAccept.Text = "Save";
             }
             else

@@ -37,7 +37,7 @@ namespace NotesHelper.Forms.SubTopic
             this.parentId = parentId;
             this.subtopicToUpdate = subtopicToUpdate;
 
-            textBoxTopic.Text = parentNode.Text;
+            textBoxTopic.Text = Common.TextHelper.UnformatTopicTex(parentNode.Text);
             
             buttonAccept.Enabled = false;
 

@@ -7,6 +7,7 @@ namespace NotesHelper.Forms.Note
     {
         private readonly Panel panel;
         private readonly Label topic;
+        private readonly Label lastSaved;
         private readonly TextBox title;
         private readonly TextBox content;
         private readonly Button buttonClose;
@@ -17,12 +18,13 @@ namespace NotesHelper.Forms.Note
 
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-        public FormNote(Panel panel, Label topic, TextBox title, TextBox content,
-            Button buttonClose, Button buttonSave, TreeHelper treeHelper
+        public FormNote(Panel panel, Label topic, Label lastSaved, TextBox title, 
+            TextBox content, Button buttonClose, Button buttonSave, TreeHelper treeHelper
         )
         {
             this.panel = panel;
             this.topic = topic;
+            this.lastSaved = lastSaved;
             this.title = title;
             this.content = content;
             this.buttonClose = buttonClose;
@@ -51,6 +53,8 @@ namespace NotesHelper.Forms.Note
 
             buttonSave.Enabled = false;
             buttonSave.Text = "Add";
+            
+            this.lastSaved.Text = "";
 
             this.panel.Visible = true;
             title.Focus();
@@ -66,6 +70,8 @@ namespace NotesHelper.Forms.Note
 
             buttonSave.Enabled = false;
             buttonSave.Text = "Save";
+
+            this.lastSaved.Text = "Last Update: " + note.LastUpdate;
 
             this.panel.Visible = true;
             content.Focus();
@@ -83,6 +89,8 @@ namespace NotesHelper.Forms.Note
             {
                 UpdateNote();
             }
+
+            SetButtonSaveEnabledStatus();
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -110,11 +118,20 @@ namespace NotesHelper.Forms.Note
                 var topicData = treeHelper.SelectedNodeData;
                 if (topicData != null)
                 {
-                    var note = Database.DA.Notes.Insert(topicId: topicData.Id, title: formattedTitle, text: content.Text);
-                    
-                    treeHelper.AddNote(note);
+                    var lastUpdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-                    ButtonClose_Click(null, null);
+                    noteToUpdate = Database.DA.Notes.Insert(
+                        topicId: topicData.Id, 
+                        title: formattedTitle, 
+                        text: content.Text,
+                        lastUpdate: lastUpdate
+                    );
+                    
+                    treeHelper.AddNote(noteToUpdate);
+                    
+                    lastSaved.Text = "Last Update: " + lastUpdate;
+
+                    this.buttonSave.Text = "Save";
                 }
             }
         }
@@ -124,14 +141,24 @@ namespace NotesHelper.Forms.Note
         {
             var formattedTitle = title.Text.Trim();
             var noteData = treeHelper.SelectedNodeData;
-            if (noteData != null)
+            if (noteData != null && noteToUpdate != null)
             {
+                var lastUpdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                
+                noteToUpdate.Text = content.Text;
+                noteToUpdate.Title = formattedTitle;
+                noteToUpdate.LastUpdate = lastUpdate;
 
-                Database.DA.Notes.Update(noteData.Id, title: formattedTitle, text: content.Text);
+                Database.DA.Notes.Update(
+                    id: noteData.Id, 
+                    title: noteToUpdate.Title, 
+                    text: noteToUpdate.Text,
+                    lastUpdate: noteToUpdate.LastUpdate
+                );
 
                 treeHelper.UpdateSelectedNoteProps(noteData.Id, formattedTitle);
 
-                ButtonClose_Click(null, null);
+                lastSaved.Text = "Last Update: " + lastUpdate;
             }
         }
         //---------------------------------------------------------------------

@@ -37,6 +37,7 @@
             addNewDocument = new ToolStripMenuItem();
             treeView = new TreeView();
             splitContainer = new SplitContainer();
+            labelLastSaved = new Label();
             buttonSave = new Button();
             buttonCancel = new Button();
             textBoxTitle = new TextBox();
@@ -104,6 +105,7 @@
             // 
             // splitContainer.Panel2
             // 
+            splitContainer.Panel2.Controls.Add(labelLastSaved);
             splitContainer.Panel2.Controls.Add(buttonSave);
             splitContainer.Panel2.Controls.Add(buttonCancel);
             splitContainer.Panel2.Controls.Add(textBoxTitle);
@@ -111,29 +113,40 @@
             splitContainer.Panel2.Controls.Add(label3);
             splitContainer.Panel2.Controls.Add(textBoxContent);
             splitContainer.Panel2.Controls.Add(label1);
-            splitContainer.Panel2.Paint += splitContainer1_Panel2_Paint;
+            splitContainer.Panel2.Paint += splitContainer_Panel2_Paint;
             splitContainer.Panel2MinSize = 500;
             splitContainer.Size = new Size(914, 498);
             splitContainer.SplitterDistance = 300;
             splitContainer.TabIndex = 2;
             // 
+            // labelLastSaved
+            // 
+            labelLastSaved.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            labelLastSaved.AutoSize = true;
+            labelLastSaved.Location = new Point(9, 472);
+            labelLastSaved.Name = "labelLastSaved";
+            labelLastSaved.Size = new Size(224, 14);
+            labelLastSaved.TabIndex = 18;
+            labelLastSaved.Text = "Last Saved: 2022-25-01 10:00:00";
+            // 
             // buttonSave
             // 
             buttonSave.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonSave.Location = new Point(523, 463);
+            buttonSave.Location = new Point(523, 468);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(75, 23);
-            buttonSave.TabIndex = 17;
+            buttonSave.TabIndex = 3;
             buttonSave.Text = "Save";
             buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
             // 
             // buttonCancel
             // 
-            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            buttonCancel.Location = new Point(9, 463);
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonCancel.Location = new Point(442, 468);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 16;
+            buttonCancel.TabIndex = 4;
             buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -143,7 +156,7 @@
             textBoxTitle.Location = new Point(64, 38);
             textBoxTitle.Name = "textBoxTitle";
             textBoxTitle.Size = new Size(534, 22);
-            textBoxTitle.TabIndex = 15;
+            textBoxTitle.TabIndex = 1;
             // 
             // labelTopic
             // 
@@ -176,7 +189,7 @@
             textBoxContent.Name = "textBoxContent";
             textBoxContent.ScrollBars = ScrollBars.Both;
             textBoxContent.Size = new Size(589, 391);
-            textBoxContent.TabIndex = 12;
+            textBoxContent.TabIndex = 2;
             textBoxContent.WordWrap = false;
             // 
             // label1
@@ -224,5 +237,6 @@
         private Label label1;
         private Button buttonSave;
         private Button buttonCancel;
+        private Label labelLastSaved;
     }
 }

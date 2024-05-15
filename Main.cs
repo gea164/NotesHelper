@@ -1,6 +1,7 @@
 using NotesHelper.Forms.Note;
 using NotesHelper.Helpers.Tree;
 using NotesHelper.Helpers.TreeMenuHandler;
+using System.Windows.Forms;
 
 namespace NotesHelper
 {
@@ -22,6 +23,7 @@ namespace NotesHelper
                 panel: splitContainer.Panel2,
                 topic: labelTopic,
                 title: textBoxTitle,
+                lastSaved: labelLastSaved,
                 content: textBoxContent,
                 buttonClose: buttonCancel,
                 buttonSave: buttonSave,
@@ -49,7 +51,12 @@ namespace NotesHelper
             formNote.Hide();
         }
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void splitContainer_Panel2_Paint(object sender, PaintEventArgs e)
         {
 
         }

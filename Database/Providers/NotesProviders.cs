@@ -18,7 +18,8 @@ namespace NotesHelper.Database.Providers
                                 id          INTEGER PRIMARY KEY,
                                 topic_id    INTEGER,
                                 title       TEXT,
-                                text        TEXT
+                                text        TEXT,
+                                last_update TEXT
                               )";
 
             SQLiteHandler.Write(query);
@@ -58,10 +59,10 @@ namespace NotesHelper.Database.Providers
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public Note Insert(long topicId, string title, string text)
+        public Note Insert(long topicId, string title, string text, string lastUpdate)
         {
-            var query = $@"INSERT INTO {TABLE_NAME} (topic_id, title, text) 
-                        VALUES ({topicId}, '{title}', '{text}')";
+            var query = $@"INSERT INTO {TABLE_NAME} (topic_id, title, text, last_update) 
+                        VALUES ({topicId}, '{title}', '{text}', '{lastUpdate}')";
 
             var result = SQLiteHandler.Write(query);
             if (result.affectedRows == 1)
@@ -70,16 +71,19 @@ namespace NotesHelper.Database.Providers
                     Id = result.lastInsertedId,
                     Text = text,
                     Title = title,
-                    TopicId = topicId
+                    TopicId = topicId,
+                    LastUpdate = lastUpdate,
                 };
             }
             throw new System.Exception($"Error adding new topic. Affected rows: {result.affectedRows}");
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public void Update(long id, string title, string text)
+        public void Update(long id, string title, string text, string lastUpdate)
         {
-            var query = $@"UPDATE {TABLE_NAME} SET title='{title}', text='{text}' WHERE id={id}";
+            var query = $@"UPDATE {TABLE_NAME} 
+                            SET title='{title}', text='{text}', last_update='{lastUpdate}'
+                            WHERE id={id}";
 
             var result = SQLiteHandler.Write(query);
             if (result.affectedRows != 1)
@@ -103,14 +107,6 @@ namespace NotesHelper.Database.Providers
             var result = SQLiteHandler.Write(query);
             return result.affectedRows;
         }
-        //-------------------------------------------------------------------------------
-        public int DeleteByTopicIds(HashSet<string> ids)
-        {
-            var query = $"DELETE FROM {TABLE_NAME} WHERE topic_id IN ({String.Join(", ", ids)})";
-            var result = SQLiteHandler.Write(query);
-            return result.affectedRows;
-        }
-
 
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
@@ -121,7 +117,8 @@ namespace NotesHelper.Database.Providers
                 Id = record["id"].ToLong(),
                 TopicId = record["topic_id"].ToLong(),
                 Title = record["title"].ToString(),
-                Text = record["text"].ToString()
+                Text = record["text"].ToString(),
+                LastUpdate = record["last_update"].ToString(),
             };
         }
     }
