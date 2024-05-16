@@ -85,11 +85,11 @@
             // 
             // treeView
             // 
+            treeView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             treeView.ContextMenuStrip = contextMenuStrip;
-            treeView.Dock = DockStyle.Fill;
-            treeView.Location = new Point(0, 0);
+            treeView.Location = new Point(7, 9);
             treeView.Name = "treeView";
-            treeView.Size = new Size(300, 498);
+            treeView.Size = new Size(290, 482);
             treeView.TabIndex = 3;
             // 
             // splitContainer
