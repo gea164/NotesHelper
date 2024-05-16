@@ -104,6 +104,18 @@ namespace NotesHelper.Helpers.Tree
             treeView.Sort();
             treeView.ExpandAll();
         }
+
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        public void Focus()
+        {
+            if (selectedNode != null)
+            {
+                treeView.SelectedNode = selectedNode;
+            }
+            treeView.Focus();
+        }
+
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         public bool ExistsNodeWithText(string text)
@@ -196,15 +208,24 @@ namespace NotesHelper.Helpers.Tree
         //---------------------------------------------------------------------
         private void TreeView_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete && selectedNode != null && SelectedNodeData != null)
+            if (selectedNode != null && SelectedNodeData != null)
             {
-                if (SelectedNodeData.Type == NodeTye.TOPIC)
+                switch(e.KeyCode)
                 {
-                    DeleteTopicAndSubTree();
-                }
-                else
-                {
-                    DelteNote();
+                    case Keys.Delete:
+                        if (SelectedNodeData.Type == NodeTye.TOPIC)
+                        {
+                            DeleteTopicAndSubTree();
+                        }
+                        else
+                        {
+                            DelteNote();
+                        }
+                        break;
+
+                    case Keys.Enter:
+                        TreeView_MouseDoubleClick(null, null);
+                        break;
                 }
             }
         }

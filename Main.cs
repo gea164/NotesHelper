@@ -60,5 +60,10 @@ namespace NotesHelper
         {
 
         }
+
+        private void textBoxContent_KeyDown(object sender, KeyEventArgs e)
+        {
+           
+        }
     }
 }

@@ -1,10 +1,13 @@
-﻿using NotesHelper.Helpers.Nodes;
+﻿using NotesHelper.Common;
+using NotesHelper.Helpers.Nodes;
 using NotesHelper.Helpers.Tree;
 
 namespace NotesHelper.Forms.Note
 {
     internal class FormNote
     {
+        const string TAB = "    ";
+
         private readonly Panel panel;
         private readonly Label topic;
         private readonly Label lastSaved;
@@ -36,6 +39,7 @@ namespace NotesHelper.Forms.Note
             this.buttonSave.Click += ButtonSave_Click;
             this.title.TextChanged += Title_TextChanged;
             this.content.TextChanged += Content_TextChanged;
+            this.content.KeyDown += Content_KeyDown;
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -47,7 +51,7 @@ namespace NotesHelper.Forms.Note
         //---------------------------------------------------------------------
         public void ShowNewNote(NodeData topicData)
         {
-            this.topic.Text = UnformatText(topicData.Text);
+            this.topic.Text = TextHelper.UnformatTopicTex(topicData.Text);
             this.title.Text = "";
             this.content.Text = "";
 
@@ -64,7 +68,7 @@ namespace NotesHelper.Forms.Note
         public void ShowUpdateNote(Database.Models.Note note, string parentTopic)
         {
             this.noteToUpdate = note;
-            this.topic.Text = UnformatText(parentTopic);
+            this.topic.Text = TextHelper.UnformatTopicTex(parentTopic);
             this.title.Text = note.Title;
             this.content.Text = note.Text;
 
@@ -98,6 +102,7 @@ namespace NotesHelper.Forms.Note
         {
             Hide();
             treeHelper.Enabled = true;
+            treeHelper.Focus();
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -175,6 +180,55 @@ namespace NotesHelper.Forms.Note
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
+        private void Content_KeyDown(object? sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    if (buttonSave.Enabled)
+                    {
+                        if (AskToSaveChanges())
+                        {
+                            ButtonSave_Click(null, null);
+                        }
+                    }
+                    ButtonClose_Click(null, null);
+                    break;
+
+                case Keys.S:
+                    if (e.Control && buttonSave.Enabled)
+                    {
+                        ButtonSave_Click(null, null);
+                    }
+                    break;
+
+                case Keys.Tab:
+                    e.SuppressKeyPress = true;
+                    e.Handled = true;
+                    int pos = content.SelectionStart;
+
+                    if (content.SelectedText.Length > 0)
+                    {
+                        content.Text = content.Text.Remove(content.SelectionStart, content.SelectionLength);
+                    }
+                    content.Text = content.Text.Insert(pos, TAB);
+                    content.SelectionStart = pos + TAB.Length;
+                    break;
+            }
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        private static bool AskToSaveChanges()
+        {
+            return MessageBox.Show(
+                      "Do you want to save the current changes?",
+                      "Changes were not saved!",
+                      MessageBoxButtons.YesNo,
+                      MessageBoxIcon.Information
+                    ) == DialogResult.Yes;
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         private void SetButtonSaveEnabledStatus()
         {
             var formattedTitle = title.Text.Trim();
@@ -194,16 +248,6 @@ namespace NotesHelper.Forms.Note
             {
                 buttonSave.Enabled = false;
             }              
-        }
-        //---------------------------------------------------------------------
-        //---------------------------------------------------------------------
-        private static string UnformatText(string text)
-        {
-            if (text.StartsWith("[ ") && text.EndsWith(" ]"))
-            {
-                return text.Substring(2, text.Length - 4);
-            }
-            return text;
         }
     }
 }

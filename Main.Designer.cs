@@ -183,6 +183,7 @@
             // 
             // textBoxContent
             // 
+            textBoxContent.AcceptsTab = true;
             textBoxContent.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBoxContent.Location = new Point(9, 66);
             textBoxContent.Multiline = true;
@@ -190,7 +191,9 @@
             textBoxContent.ScrollBars = ScrollBars.Both;
             textBoxContent.Size = new Size(589, 391);
             textBoxContent.TabIndex = 2;
+            textBoxContent.TabStop = false;
             textBoxContent.WordWrap = false;
+            textBoxContent.KeyDown += textBoxContent_KeyDown;
             // 
             // label1
             // 
