@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Forms\Encryption\FormEnterPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\SubTopic\FormSubTopic.cs">
       <SubType>Form</SubType>
     </Compile>

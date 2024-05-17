@@ -1,4 +1,5 @@
 ﻿using NotesHelper.Common;
+using NotesHelper.Forms.Encryption;
 using NotesHelper.Helpers.Nodes;
 using NotesHelper.Helpers.Tree;
 
@@ -14,15 +15,19 @@ namespace NotesHelper.Forms.Note
         private readonly TextBox title;
         private readonly TextBox content;
         private readonly Button buttonClose;
+        private readonly Button buttonEncrypt;
         private readonly Button buttonSave;
         private readonly TreeHelper treeHelper;
 
         private Database.Models.Note? noteToUpdate = null;
+        private string? password = null;
+        private string contentSaved = "";
 
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
-        public FormNote(Panel panel, Label topic, Label lastSaved, TextBox title, 
-            TextBox content, Button buttonClose, Button buttonSave, TreeHelper treeHelper
+        public FormNote(Panel panel, Label topic, Label lastSaved, TextBox title,
+            TextBox content, Button buttonClose, Button buttonSave, Button buttonEncrypt, 
+            TreeHelper treeHelper
         )
         {
             this.panel = panel;
@@ -32,12 +37,17 @@ namespace NotesHelper.Forms.Note
             this.content = content;
             this.buttonClose = buttonClose;
             this.buttonSave = buttonSave;
+            this.buttonEncrypt = buttonEncrypt;
             this.treeHelper = treeHelper;
 
             //Events
             this.buttonClose.Click += ButtonClose_Click;
             this.buttonSave.Click += ButtonSave_Click;
+            this.buttonEncrypt.Click += ButtonEncrypt_Click;
+
             this.title.TextChanged += Title_TextChanged;
+            this.title.KeyDown += Title_KeyDown;
+
             this.content.TextChanged += Content_TextChanged;
             this.content.KeyDown += Content_KeyDown;
         }
@@ -48,12 +58,15 @@ namespace NotesHelper.Forms.Note
             this.panel.Visible = false; 
         }
         //---------------------------------------------------------------------
+        // Used to add a new note.
         //---------------------------------------------------------------------
         public void ShowNewNote(NodeData topicData)
         {
             this.topic.Text = TextHelper.UnformatTopicTex(topicData.Text);
             this.title.Text = "";
             this.content.Text = "";
+            this.contentSaved = "";
+            this.password = null;
 
             buttonSave.Enabled = false;
             buttonSave.Text = "Add";
@@ -64,13 +77,16 @@ namespace NotesHelper.Forms.Note
             title.Focus();
         }
         //---------------------------------------------------------------------
+        // Used to update a note.
         //---------------------------------------------------------------------
-        public void ShowUpdateNote(Database.Models.Note note, string parentTopic)
+        public void ShowUpdateNote(Database.Models.Note note, string parentTopic, string? password)
         {
             this.noteToUpdate = note;
             this.topic.Text = TextHelper.UnformatTopicTex(parentTopic);
             this.title.Text = note.Title;
             this.content.Text = note.Text;
+            this.contentSaved = note.Text;
+            this.password = password;   
 
             buttonSave.Enabled = false;
             buttonSave.Text = "Save";
@@ -98,9 +114,27 @@ namespace NotesHelper.Forms.Note
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
+        private void ButtonEncrypt_Click(object? sender, EventArgs e)
+        {
+            var formPassword = new FormSetPassword();
+            formPassword.OnEnteredPassword += (password) =>
+            {
+                this.password = password;
+
+                ButtonSave_Click(null, null);
+            };
+
+            formPassword.ShowDialog();
+        }
+
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         private void ButtonClose_Click(object? sender, EventArgs e)
         {
+            password = null;
+
             Hide();
+            
             treeHelper.Enabled = true;
             treeHelper.Focus();
         }
@@ -125,10 +159,13 @@ namespace NotesHelper.Forms.Note
                 {
                     var lastUpdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
+                    contentSaved = content.Text;
+
                     noteToUpdate = Database.DA.Notes.Insert(
                         topicId: topicData.Id, 
                         title: formattedTitle, 
-                        text: content.Text,
+                        text: GetContent(content.Text, this.password),
+                        isEncrypted: password != null,
                         lastUpdate: lastUpdate
                     );
                     
@@ -142,6 +179,20 @@ namespace NotesHelper.Forms.Note
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
+        private static string GetContent(string content, string? password)
+        {
+            if (password != null)
+            {
+                var encryptedContent = Crypto.Encrypt(content, password);
+                if (encryptedContent != null)
+                {
+                    return encryptedContent;
+                }
+            }
+            return content;
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
         private void UpdateNote()
         {
             var formattedTitle = title.Text.Trim();
@@ -149,8 +200,11 @@ namespace NotesHelper.Forms.Note
             if (noteData != null && noteToUpdate != null)
             {
                 var lastUpdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                
-                noteToUpdate.Text = content.Text;
+
+                contentSaved = content.Text;
+
+                noteToUpdate.Text = GetContent(content.Text, this.password);
+                noteToUpdate.IsEncrypted = this.password != null;
                 noteToUpdate.Title = formattedTitle;
                 noteToUpdate.LastUpdate = lastUpdate;
 
@@ -158,7 +212,8 @@ namespace NotesHelper.Forms.Note
                     id: noteData.Id, 
                     title: noteToUpdate.Title, 
                     text: noteToUpdate.Text,
-                    lastUpdate: noteToUpdate.LastUpdate
+                    lastUpdate: noteToUpdate.LastUpdate,
+                    isEncrypted: noteToUpdate.IsEncrypted
                 );
 
                 treeHelper.UpdateSelectedNoteProps(noteData.Id, formattedTitle);
@@ -177,6 +232,24 @@ namespace NotesHelper.Forms.Note
         private void Content_TextChanged(object? sender, EventArgs e)
         {
             SetButtonSaveEnabledStatus();
+        }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+        private void Title_KeyDown(object? sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    if (buttonSave.Enabled)
+                    {
+                        if (AskToSaveChanges())
+                        {
+                            ButtonSave_Click(null, null);
+                        }
+                    }
+                    ButtonClose_Click(null, null);
+                    break;
+            }
         }
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -237,7 +310,7 @@ namespace NotesHelper.Forms.Note
                 if (noteToUpdate != null)
                 {
                     buttonSave.Enabled = formattedTitle != noteToUpdate.Title
-                        || content.Text != noteToUpdate.Text;
+                        || content.Text != contentSaved;
                 }
                 else
                 {

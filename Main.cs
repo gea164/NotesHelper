@@ -1,3 +1,5 @@
+using NotesHelper.Database.Models;
+using NotesHelper.Forms.Encryption;
 using NotesHelper.Forms.Note;
 using NotesHelper.Helpers.Tree;
 using NotesHelper.Helpers.TreeMenuHandler;
@@ -27,6 +29,7 @@ namespace NotesHelper
                 content: textBoxContent,
                 buttonClose: buttonCancel,
                 buttonSave: buttonSave,
+                buttonEncrypt: buttonEncrypt,
                 treeHelper: tree
             );
 
@@ -41,12 +44,39 @@ namespace NotesHelper
             );
 
             //Events connections
-            tree.OnNoteDoubleClick += formNote.ShowUpdateNote;
+            tree.OnNoteDoubleClick += UpdateNote;
         }
+        //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
+
+        private bool UpdateNote(Note note, string parentTopic)
+        {
+            bool result = true;
+            if (note.IsEncrypted)
+            {
+                var formPassword = new FormEnterPassword(note.Text);
+                
+                formPassword.OnEnteredPassword += (decryptedContent, password) =>
+                {
+                    note.Text = decryptedContent;
+                    formNote.ShowUpdateNote(note, parentTopic, password);
+                    result = false;
+                };
+
+                formPassword.ShowDialog();
+            }
+            else
+            {
+                formNote.ShowUpdateNote(note, parentTopic, password: null);
+            }
+            return result;            
+        }
+
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.Text = $"NotesHelper - {Version.Number}";
             tree.Load();
             formNote.Hide();
         }
@@ -63,7 +93,12 @@ namespace NotesHelper
 
         private void textBoxContent_KeyDown(object sender, KeyEventArgs e)
         {
-           
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

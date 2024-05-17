@@ -5,7 +5,10 @@ namespace NotesHelper.Database.Providers
 {
     class NodesProviders
     {
-        private static readonly string TABLE_NAME = "notes";
+        private const int TRUE = 1;
+        private const int FALSE = 0;
+
+        private const string TABLE_NAME = "notes";
 
         //-------------------------------------------------------------------------------
         // Constructor.
@@ -15,11 +18,12 @@ namespace NotesHelper.Database.Providers
         {
             SQLiteHandler.Initialize("database.db");
             string query = $@"CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
-                                id          INTEGER PRIMARY KEY,
-                                topic_id    INTEGER,
-                                title       TEXT,
-                                text        TEXT,
-                                last_update TEXT
+                                id           INTEGER PRIMARY KEY,
+                                topic_id     INTEGER,
+                                title        TEXT,
+                                text         TEXT,
+                                last_update  TEXT,
+                                is_encrypted INTEGER
                               )";
 
             SQLiteHandler.Write(query);
@@ -59,10 +63,11 @@ namespace NotesHelper.Database.Providers
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public Note Insert(long topicId, string title, string text, string lastUpdate)
+        public Note Insert(long topicId, string title, string text, string lastUpdate, bool isEncrypted)
         {
-            var query = $@"INSERT INTO {TABLE_NAME} (topic_id, title, text, last_update) 
-                        VALUES ({topicId}, '{title}', '{text}', '{lastUpdate}')";
+            var isEncryptedValue = isEncrypted ? TRUE : FALSE;
+            var query = $@"INSERT INTO {TABLE_NAME} (topic_id, title, text, last_update, is_encrypted) 
+                        VALUES ({topicId}, '{title}', '{text}', '{lastUpdate}', {isEncryptedValue})";
 
             var result = SQLiteHandler.Write(query);
             if (result.affectedRows == 1)
@@ -73,16 +78,21 @@ namespace NotesHelper.Database.Providers
                     Title = title,
                     TopicId = topicId,
                     LastUpdate = lastUpdate,
+                    IsEncrypted = isEncrypted,
                 };
             }
             throw new System.Exception($"Error adding new topic. Affected rows: {result.affectedRows}");
         }
         //-------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------
-        public void Update(long id, string title, string text, string lastUpdate)
+        public void Update(long id, string title, string text, string lastUpdate, bool isEncrypted)
         {
+            var isEncryptedValue = isEncrypted ? TRUE : FALSE;
             var query = $@"UPDATE {TABLE_NAME} 
-                            SET title='{title}', text='{text}', last_update='{lastUpdate}'
+                            SET title='{title}', 
+                                text='{text}',
+                                last_update='{lastUpdate}',
+                                is_encrypted={isEncryptedValue}
                             WHERE id={id}";
 
             var result = SQLiteHandler.Write(query);
@@ -119,6 +129,7 @@ namespace NotesHelper.Database.Providers
                 Title = record["title"].ToString(),
                 Text = record["text"].ToString(),
                 LastUpdate = record["last_update"].ToString(),
+                IsEncrypted = record["is_encrypted"].ToInt() == TRUE,
             };
         }
     }

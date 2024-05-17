@@ -7,5 +7,6 @@
         public string Title = "";
         public string Text = "";
         public string LastUpdate = "";
+        public bool IsEncrypted = false;
     }
 }

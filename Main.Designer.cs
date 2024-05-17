@@ -37,6 +37,7 @@
             addNewDocument = new ToolStripMenuItem();
             treeView = new TreeView();
             splitContainer = new SplitContainer();
+            buttonEncrypt = new Button();
             labelLastSaved = new Label();
             buttonSave = new Button();
             buttonCancel = new Button();
@@ -90,7 +91,7 @@
             treeView.Location = new Point(7, 9);
             treeView.Name = "treeView";
             treeView.Size = new Size(290, 482);
-            treeView.TabIndex = 3;
+            treeView.TabIndex = 99;
             // 
             // splitContainer
             // 
@@ -105,6 +106,7 @@
             // 
             // splitContainer.Panel2
             // 
+            splitContainer.Panel2.Controls.Add(buttonEncrypt);
             splitContainer.Panel2.Controls.Add(labelLastSaved);
             splitContainer.Panel2.Controls.Add(buttonSave);
             splitContainer.Panel2.Controls.Add(buttonCancel);
@@ -118,6 +120,17 @@
             splitContainer.Size = new Size(914, 498);
             splitContainer.SplitterDistance = 300;
             splitContainer.TabIndex = 2;
+            // 
+            // buttonEncrypt
+            // 
+            buttonEncrypt.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            buttonEncrypt.Location = new Point(523, 38);
+            buttonEncrypt.Name = "buttonEncrypt";
+            buttonEncrypt.Size = new Size(75, 23);
+            buttonEncrypt.TabIndex = 5;
+            buttonEncrypt.Text = "Encrypt";
+            buttonEncrypt.UseVisualStyleBackColor = true;
+            buttonEncrypt.Click += button1_Click;
             // 
             // labelLastSaved
             // 
@@ -155,7 +168,7 @@
             textBoxTitle.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBoxTitle.Location = new Point(64, 38);
             textBoxTitle.Name = "textBoxTitle";
-            textBoxTitle.Size = new Size(534, 22);
+            textBoxTitle.Size = new Size(453, 22);
             textBoxTitle.TabIndex = 1;
             // 
             // labelTopic
@@ -191,7 +204,6 @@
             textBoxContent.ScrollBars = ScrollBars.Both;
             textBoxContent.Size = new Size(589, 391);
             textBoxContent.TabIndex = 2;
-            textBoxContent.TabStop = false;
             textBoxContent.WordWrap = false;
             textBoxContent.KeyDown += textBoxContent_KeyDown;
             // 
@@ -241,5 +253,6 @@
         private Button buttonSave;
         private Button buttonCancel;
         private Label labelLastSaved;
+        private Button buttonEncrypt;
     }
 }

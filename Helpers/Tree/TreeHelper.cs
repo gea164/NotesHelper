@@ -16,8 +16,8 @@ namespace NotesHelper.Helpers.Tree
         private readonly TreeView treeView;
         private TreeNode? selectedNode = null;
 
-        public delegate void OnNoteDoubleClickEvent(Note note, string parentTopic);
-        public OnNoteDoubleClickEvent? OnNoteDoubleClick;
+        public delegate bool OnNoteDoubleClickEvent(Note note, string parentTopic);
+        public OnNoteDoubleClickEvent OnNoteDoubleClick;
 
         //---------------------------------------------------------------------
         //---------------------------------------------------------------------
@@ -270,9 +270,9 @@ namespace NotesHelper.Helpers.Tree
                     MessageBoxIcon.Question)
                     == DialogResult.Yes)
             {
-                selectedNode = null;
-
                 Database.DA.Notes.Delete(SelectedNodeData.Id);
+                
+                selectedNode = null;
                 Load();
             }
         }
@@ -287,8 +287,7 @@ namespace NotesHelper.Helpers.Tree
                     var note = Database.DA.Notes.GetNote(SelectedNodeData.Id);
                     if (note != null)
                     {
-                        Enabled = false;
-                        OnNoteDoubleClick?.Invoke(note, SelectedNode.Parent.Text);
+                        Enabled = OnNoteDoubleClick.Invoke(note, SelectedNode.Parent.Text);
                     }
                 }
             }
